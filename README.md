@@ -33,7 +33,7 @@
     Clone 这个 Helm Charts，我是从官方拷贝出来的，然后修了一点 bug，因为官方提供的 service 和 deployment 无法连接，所以我修了，使用我提供的 Helm Charts 就好。
     **官方 Helm Charts:** [https://github.com/hoppscotch/helm-charts](https://github.com/hoppscotch/helm-charts)
     ```bash
-    git clone [https://github.com/rudian/hoppscotch-helm-charts.git](https://github.com/rudian/hoppscotch-helm-charts.git)
+    git clone https://github.com/rudian/hoppscotch-helm-charts.git
     ```
 
 5.  **进入 Helm Charts 目录**
@@ -44,8 +44,10 @@
 6.  **修改 `your_config.yaml`**
     修改 `your_config.yaml` 到你自己的参数，你也可以参考原版的 `yaml`。我的版本是设置了 SSL 的。
     必须设置 `email`，因为一开始登入只能使用 email 发送的方式来登入。
+    <br/><br/>
     **原版的 `yaml` 路径:** `hoppscotch-helm-charts/blob/main/charts/shc/values.yaml`
     关于 PostgreSQL 的 `storageClass`，由于我使用的是阿里云的 ACK，所以默认有好几种 `storageClass` 可以选，而且最低起步必须是 20GB。
+    <br/><br/>
     ![](https://www.pangzai.win/wp-content/uploads/2025/05/image-41.png)
 
 7.  **使用 Helm 安装 Hoppscotch**
