@@ -1,4 +1,5 @@
 #Kubernetes部署Hoppscotch Community Version平替Postman
+[原文章](https://www.pangzai.win/kubernetes%e9%83%a8%e7%bd%b2hoppscotch%e5%b9%b3%e6%9b%bfpostman/)
 
 1\. 创建namespace
 
