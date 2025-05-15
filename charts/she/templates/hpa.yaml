@@ -1,0 +1,30 @@
+# templates/hpa.yaml
+{{- if .Values.enterprise.config.horizontalScaling.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Release.Name }}-hpa
+  namespace: {{ .Values.global.namespace | default .Release.Namespace }}
+  annotations:
+    autoscaling/enabled: "true"
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Release.Name }}-enterprise
+  minReplicas: {{ .Values.enterprise.config.horizontalScaling.minReplicas }}
+  maxReplicas: {{ .Values.enterprise.config.horizontalScaling.maxReplicas }}
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: {{ .Values.enterprise.config.horizontalScaling.targetCPUUtilizationPercentage }}
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: {{ .Values.enterprise.config.horizontalScaling.targetMemoryUtilizationPercentage }}
+{{- end }}

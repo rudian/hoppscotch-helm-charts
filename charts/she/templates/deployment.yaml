@@ -1,0 +1,92 @@
+# templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-enterprise
+  namespace: {{ .Values.global.namespace | default .Release.Namespace }}
+  labels:
+    app: {{ .Release.Name }}-enterprise
+spec:
+  replicas: {{ .Values.enterprise.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-enterprise
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-enterprise
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        rollme: {{ randAlphaNum 5 | quote }}
+    spec:
+      serviceAccountName: {{ .Values.serviceAccount.name | default (printf "%s-sa" .Release.Name) }}
+      initContainers:
+      {{- if not .Values.enterprise.config.database.external }}
+      - name: wait-for-postgres
+        image: postgres:15-alpine
+        command:
+          - /bin/sh
+          - -c
+          - |
+            until pg_isready -h {{ .Release.Name }}-postgresql -p 5432 -U {{ .Values.enterprise.config.postgresql.username }}; do
+              sleep 2
+            done
+      {{- end }}
+      - name: wait-for-migration
+        image: bitnami/kubectl:latest
+        command:
+          - /bin/sh
+          - -c
+          - |
+            echo "Waiting for migration to complete..."
+            while true; do
+              echo "Running kubectl command to check job status..."
+              if [ "$(kubectl get job {{ .Release.Name }}-db-migration -o jsonpath='{.status.succeeded}')" = "1" ]; then
+                echo "Migration completed."
+                break
+              fi
+              echo "Migration not yet completed. Retrying in 2 seconds..."
+              sleep 2
+            done
+      containers:
+        - name: enterprise
+          image: "{{ .Values.enterprise.image.repository }}:{{ .Values.enterprise.image.tag }}"
+          imagePullPolicy: {{ .Values.enterprise.image.pullPolicy }}
+          ports:
+          {{- if .Values.enterprise.config.enterprise.enableSubpathBasedAccess }}
+            - containerPort: {{ .Values.service.ports.subpath.targetPort }}
+              name: {{ .Values.service.ports.subpath.name }}
+          {{- else }}
+            - containerPort: {{ .Values.service.ports.backend.targetPort }}
+              name: {{ .Values.service.ports.backend.name }}
+            - containerPort: {{ .Values.service.ports.frontend.targetPort }}
+              name: {{ .Values.service.ports.frontend.name }}
+            - containerPort: {{ .Values.service.ports.admin.targetPort }}
+              name: {{ .Values.service.ports.admin.name }}
+          {{- end }}
+          envFrom:
+            - configMapRef:
+                name: {{ .Release.Name }}-enterprise-config
+            - secretRef:
+                name: {{ .Release.Name }}-enterprise-secrets
+          resources:
+            {{- toYaml .Values.enterprise.resources | nindent 12 }}
+      {{- if .Values.enterprise.config.affinityEnabled }}
+      affinity: 
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: "kubernetes.io/hostname"
+                    operator: In
+                    values:
+                      {{- $nodeHostnames := .Values.enterprise.config.nodeHostnames | split "," }}
+                      {{- range $node := $nodeHostnames }}
+                      - "{{ $node }}"
+                      {{- end }}
+      {{- end }}
