@@ -97,7 +97,7 @@ community:
         tenant:  "" # "dummyTenantId"
 
     community:
-      enableSubpathBasedAccess: false
+      enableSubpathBasedAccess: true
 
     links:
       tos: "https://docs.example.com/terms"
