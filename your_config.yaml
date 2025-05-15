@@ -63,15 +63,15 @@ community:
       dataEncryptionKey: "data encryption key with 32 char"
 
     urls:
-      base: "https://hcfrontend.pangzai.win"
-      shortcode: "https://hcfrontend.pangzai.win"
-      admin: "https://hcadmin.pangzai.win"
+      base: "https://hcbackend.pangzai.win"
+      shortcode: "https://hcbackend.pangzai.win"
+      admin: "https://hcbackend.pangzai.win/admin"
       backend:
-        gql: "https://hcbackend.pangzai.win/graphql"
-        ws: "wss://hcbackend.pangzai.win/graphql"
-        api: "https://hcbackend.pangzai.win/v1"
-      redirect: "https://hcfrontend.pangzai.win"
-      whitelistedOrigins: "https://hcbackend.pangzai.win,https://hcfrontend.pangzai.win,https://hcadmin.pangzai.win"
+        gql: "https://hcbackend.pangzai.win/backend/graphql"
+        ws: "ws://hcbackend.pangzai.win/backend/graphql"
+        api: "https://hcbackend.pangzai.win/backend/v1"
+      redirect: "https://hcbackend.pangzai.win"
+      whitelistedOrigins: "https://hcbackend.pangzai.win/backend,https://hcbackend.pangzai.win,https://hcbackend.pangzai.win/admin"
 
     auth:
       allowedProviders: "EMAIL" # "GOOGLE,MICROSOFT,GITHUB,EMAIL"
@@ -149,9 +149,7 @@ service:
   # Ingress Configuration
   ingress:
     enabled: true
-    mainHost: hcfrontend.pangzai.win
-    adminHost: hcadmin.pangzai.win
-    backendHost: hcbackend.pangzai.win
+    mainHost: hcbackend.pangzai.win
     className: nginx # nginx, alb, traefik
 
     annotations:
@@ -159,6 +157,7 @@ service:
       nginx.ingress.kubernetes.io/ssl-redirect: "true"
       service.kubernetes.io/load-balancer-type: "External"
       cert-manager.io/issuer: "hoppscotch/letsencrypt-dns01" #使用cert manager的话就必须加上
+
       # Example AWS ALB internal configuration
       # alb.ingress.kubernetes.io/scheme: "internal"
       # alb.ingress.kubernetes.io/security-groups: "sg-12345678"
