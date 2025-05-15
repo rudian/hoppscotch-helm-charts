@@ -68,7 +68,9 @@
 
 8.  **访问 Hoppscotch Admin Panel**
     安装完成之后就可以进入 `hcadmin.pangzai.win`，然后填写你的 email，系统就会发出登入 token 给你的。你点击 email 就能登入到 admin panel 了。
-
+    <br/><br/>
     **注意：** 第一个 email 进入 admin panel 的就是 admin 了，第二个就不是了。
+    <br/><br/>
     **我遇到的问题：** 一开始登入到 admin panel，然后去到 setup 页面遇到了 CORS 的问题，我尝试了在 ingress 当中允许 CORS，设了之后还是一样无法解决问题，最终我使用了 Chrome 插件来解决。这个 setup 页面第一次进入设定之后就不会再进入了。
+    <br/><br/>
     **允许 CORS 的 Chrome 插件：** [https://chromewebstore.google.com/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf?hl=en](https://chromewebstore.google.com/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf?hl=en)
