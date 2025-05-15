@@ -12,7 +12,7 @@
     参考： [https://www.pangzai.win/kubernetes-%e4%bd%bf%e7%94%a8-cert-manager-%e8%87%aa%e5%8a%a8%e7%ad%be%e5%8f%91-https-%e8%af%81%e4%b9%a6-%e3%80%903%e3%80%91/](https://www.pangzai.win/kubernetes-%e4%bd%bf%e7%94%a8-cert-manager-%e8%87%aa%e5%8a%a8%e7%ad%be%e5%8f%91-https-%e8%af%81%e4%b9%a6-%e3%80%903%e3%80%91/)
 
 3.  **创建 Certificate**
-    创建 Hoppscotch 需要 3 个 subdomain，分别是 `frontend`、`backend` 和 `admin`。
+    创建 Hoppscotch 需要 1 个 subdomain
     ```yaml
     apiVersion: cert-manager.io/v1
     kind: Certificate
@@ -22,8 +22,6 @@
     spec:
       dnsNames:
         - hcfrontend.pangzai.win
-        - hcbackend.pangzai.win
-        - hcadmin.pangzai.win
       secretName: hoppscotch-cert-tls
       issuerRef:
         name: letsencrypt-dns01
@@ -44,6 +42,8 @@
 6.  **修改 `your_config.yaml`**
     修改 `your_config.yaml` 到你自己的参数，你也可以参考原版的 `yaml`。我的版本是设置了 SSL 的。
     必须设置 `email`，因为一开始登入只能使用 email 发送的方式来登入。
+    <br/><br/>
+    如果你想要desktop app要使用的话，那么enableSubpathBasedAccess就必须是true
     <br/><br/>
     **原版的 `yaml` 路径:** `hoppscotch-helm-charts/blob/main/charts/shc/values.yaml`
     关于 PostgreSQL 的 `storageClass`，由于我使用的是阿里云的 ACK，所以默认有好几种 `storageClass` 可以选，而且最低起步必须是 20GB。
