@@ -237,9 +237,3 @@
 **我遇到的问题：**一开始登入到admin panel，然后去到setup页面遇到了CORS的问题，我尝试了在ingress当中允许cors，设了之后还是一样无法解决问题，最终我使用了chrome插件来解决。这个setup页面第一次进入设定之后就不会再进入了。
 
 **允许CORS的chrome插件：**[https://chromewebstore.google.com/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf?hl=en](https://chromewebstore.google.com/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf?hl=en)
-
-2 total views , 2 views today
-
-Facebook评论
-
-#wpdevar\_comment\_2 span,#wpdevar\_comment\_2 iframe{width:100% !important;} #wpdevar\_comment\_2 iframe{max-height: 100% !important;}
