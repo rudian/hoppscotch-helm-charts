@@ -1,18 +1,19 @@
-#Kubernetes部署Hoppscotch Community Version平替Postman
+# Kubernetes 部署 Hoppscotch Community Version 平替 Postman
+
 [原文章](https://www.pangzai.win/kubernetes%e9%83%a8%e7%bd%b2hoppscotch%e5%b9%b3%e6%9b%bfpostman/)
 
-1\. 创建namespace
-
+1.  **创建 namespace**
+    ```bash
     kubectl create ns hoppscotch
+    ```
 
-2\. 我使用的是cert manager自动生成ssl证书，所以需要在这个新那么space当中，创建cloudflare api token 和 issuer
+2.  **创建 Cloudflare API Token 和 Issuer**
+    我使用的是 cert-manager 自动生成 SSL 证书，所以需要在 `hoppscotch` 这个 namespace 当中，创建 Cloudflare API Token 和 Issuer。
+    参考： [https://www.pangzai.win/kubernetes-%e4%bd%bf%e7%94%a8-cert-manager-%e8%87%aa%e5%8a%a8%e7%ad%be%e5%8f%91-https-%e8%af%81%e4%b9%a6-%e3%80%903%e3%80%91/](https://www.pangzai.win/kubernetes-%e4%bd%bf%e7%94%a8-cert-manager-%e8%87%aa%e5%8a%a8%e7%ad%be%e5%8f%91-https-%e8%af%81%e4%b9%a6-%e3%80%903%e3%80%91/)
 
-参考： [https://www.pangzai.win/kubernetes-%e4%bd%bf%e7%94%a8-cert-manager-%e8%87%aa%e5%8a%a8%e7%ad%be%e5%8f%91-https-%e8%af%81%e4%b9%a6-%e3%80%903%e3%80%91/](https://www.pangzai.win/kubernetes-%e4%bd%bf%e7%94%a8-cert-manager-%e8%87%aa%e5%8a%a8%e7%ad%be%e5%8f%91-https-%e8%af%81%e4%b9%a6-%e3%80%903%e3%80%91/)
-
-3\. 创建certificate
-
-创建Hoppscotch需要3个subdomain , 分别是frontend , backend 和 admin
-
+3.  **创建 Certificate**
+    创建 Hoppscotch 需要 3 个 subdomain，分别是 `frontend`、`backend` 和 `admin`。
+    ```yaml
     apiVersion: cert-manager.io/v1
     kind: Certificate
     metadata:
@@ -26,47 +27,46 @@
       secretName: hoppscotch-cert-tls
       issuerRef:
         name: letsencrypt-dns01
+    ```
 
-4\. git clone 这个helm charts , 我是从官方拷贝出来的，然后修了一点bug，因为官方提供的service和deployment无法连接，所以我修了，使用我提供的helm charts就好。  
-**官方HelmCharts :** [https://github.com/hoppscotch/helm-charts](https://github.com/hoppscotch/helm-charts)
+4.  **Clone Helm Charts**
+    Clone 这个 Helm Charts，我是从官方拷贝出来的，然后修了一点 bug，因为官方提供的 service 和 deployment 无法连接，所以我修了，使用我提供的 Helm Charts 就好。
+    **官方 Helm Charts:** [https://github.com/hoppscotch/helm-charts](https://github.com/hoppscotch/helm-charts)
+    ```bash
+    git clone [https://github.com/rudian/hoppscotch-helm-charts.git](https://github.com/rudian/hoppscotch-helm-charts.git)
+    ```
 
-    git clone https://github.com/rudian/hoppscotch-helm-charts.git
-
-5\. 去到这个path内
-
+5.  **进入 Helm Charts 目录**
+    ```bash
     cd hoppscotch-helm-charts
+    ```
 
-6\. 修改your\_config.yaml 到你自己的参数，你也可以参考原版的yaml。我的版本是设置了SSL的
+6.  **修改 `your_config.yaml`**
+    修改 `your_config.yaml` 到你自己的参数，你也可以参考原版的 `yaml`。我的版本是设置了 SSL 的。
+    必须设置 `email`，因为一开始登入只能使用 email 发送的方式来登入。
+    **原版的 `yaml` 路径:** `hoppscotch-helm-charts/blob/main/charts/shc/values.yaml`
+    关于 PostgreSQL 的 `storageClass`，由于我使用的是阿里云的 ACK，所以默认有好几种 `storageClass` 可以选，而且最低起步必须是 20GB。
+    ![](https://www.pangzai.win/wp-content/uploads/2025/05/image-41.png)
 
-必须设置email，因为一开始登入只能使用email发送的方式来登入。
-
-**原版的yaml路径：**hoppscotch-helm-charts/blob/main/charts/shc/values.yaml
-
-关于postgres的storageClass由于我使用的是阿里云的ACK，所以默认有好几种storageClass可以选，而且最低起步必须是20GB。
-
-![](https://www.pangzai.win/wp-content/uploads/2025/05/image-41.png)
-
-
-7\. 修改完your\_config.yaml之后就是在kubernetes cluster当中执行helm来安装Hoppscotch
-
-如果没有附上最后的 ./your\_config.yaml 那么程序就会拿原版的yaml
-
+7.  **使用 Helm 安装 Hoppscotch**
+    修改完 `your_config.yaml` 之后就是在 Kubernetes 集群当中执行 Helm 来安装 Hoppscotch。
+    如果没有附上最后的 `./your_config.yaml`，那么程序就会拿原版的 `yaml`。
+    ```bash
     helm install community-hoppscotch ./charts/shc -f ./your_config.yaml
-
-如果你之后有进行任何更改your\_config.yaml的话，可以执行以下的命令更新setting
-
+    ```
+    如果你之后有进行任何更改 `your_config.yaml` 的话，可以执行以下的命令更新 setting。
+    ```bash
     helm upgrade community-hoppscotch ./charts/shc -f ./your_config.yaml
+    ```
+    ![](https://www.pangzai.win/wp-content/uploads/2025/05/image-42.png)
+    如果你想要删除整个安装的 Hoppscotch 的话，可以使用以下的命令。
+    ```bash
+    helm uninstall community-hoppscotch
+    ```
 
-![](https://www.pangzai.win/wp-content/uploads/2025/05/image-42.png)
+8.  **访问 Hoppscotch Admin Panel**
+    安装完成之后就可以进入 `hcadmin.pangzai.win`，然后填写你的 email，系统就会发出登入 token 给你的。你点击 email 就能登入到 admin panel 了。
 
-如果你想要删除整个安装的Hoppscotch的话，可以使用以下的命令
-
-    helm uninstall community-hoppscotch  
-
-8\. 安装完成之后就可以进入hcadmin.pangzai.win , 然后填写你的email，系统就会发出登入token给你的。你点击email就能登入到admin panel了。  
-  
-**注意：** 第一个email进入admin panel的就是admin了，第二个就不是了。
-
-**我遇到的问题：**一开始登入到admin panel，然后去到setup页面遇到了CORS的问题，我尝试了在ingress当中允许cors，设了之后还是一样无法解决问题，最终我使用了chrome插件来解决。这个setup页面第一次进入设定之后就不会再进入了。
-
-**允许CORS的chrome插件：**[https://chromewebstore.google.com/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf?hl=en](https://chromewebstore.google.com/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf?hl=en)
+    **注意：** 第一个 email 进入 admin panel 的就是 admin 了，第二个就不是了。
+    **我遇到的问题：** 一开始登入到 admin panel，然后去到 setup 页面遇到了 CORS 的问题，我尝试了在 ingress 当中允许 CORS，设了之后还是一样无法解决问题，最终我使用了 Chrome 插件来解决。这个 setup 页面第一次进入设定之后就不会再进入了。
+    **允许 CORS 的 Chrome 插件：** [https://chromewebstore.google.com/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf?hl=en](https://chromewebstore.google.com/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf?hl=en)
