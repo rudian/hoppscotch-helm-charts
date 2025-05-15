@@ -1,6 +1,6 @@
 # Kubernetes 部署 Hoppscotch Community Version 平替 Postman
 
-[原文章](https://www.pangzai.win/kubernetes%e9%83%a8%e7%bd%b2hoppscotch%e5%b9%b3%e6%9b%bfpostman/)
+[原文章](https://www.pangzai.win/kubernetes%e9%83%a8%e7%bd%b2hoppscotch%e5%b9%b3%e6%9b%bfpostman/){:target="_blank"}
 <br/><br/>
 ## 安装步骤
 
@@ -31,7 +31,7 @@
 
 4.  **Clone Helm Charts**
     Clone 这个 Helm Charts，我是从官方拷贝出来的，然后修了一点 bug，因为官方提供的 service 和 deployment 无法连接，所以我修了，使用我提供的 Helm Charts 就好。
-    **官方 Helm Charts:** [https://github.com/hoppscotch/helm-charts](https://github.com/hoppscotch/helm-charts)
+    **官方 Helm Charts:** [https://github.com/hoppscotch/helm-charts](https://github.com/hoppscotch/helm-charts){:target="_blank"}
     ```bash
     git clone https://github.com/rudian/hoppscotch-helm-charts.git
     ```
@@ -75,4 +75,4 @@
     <br/><br/>
     **我遇到的问题：** 一开始登入到 admin panel，然后去到 setup 页面遇到了 CORS 的问题，我尝试了在 ingress 当中允许 CORS，设了之后还是一样无法解决问题，最终我使用了 Chrome 插件来解决。这个 setup 页面第一次进入设定之后就不会再进入了。
     <br/><br/>
-    **允许 CORS 的 Chrome 插件：** [https://chromewebstore.google.com/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf?hl=en](https://chromewebstore.google.com/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf?hl=en)
+    **允许 CORS 的 Chrome 插件：** [https://chromewebstore.google.com/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf?hl=en](https://chromewebstore.google.com/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf?hl=en){:target="_blank"}
