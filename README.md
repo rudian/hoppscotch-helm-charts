@@ -57,6 +57,13 @@
     <br/><br/>
     ![](https://www.pangzai.win/wp-content/uploads/2025/05/image-41.png)
 
+    **使用Desktop App的话需要注意这点**
+    - 在your_config.yaml 的 whitelistedOrigins 必须设对，否则你的Desktop APP无法正常使用，以下是我的setting，可以参考一下
+    ```bash
+    whitelistedOrigins: "app://hcbackend_bm3913_com_my,http://app.hcbackend_bm3913_com_my"
+    ```
+    ![](https://www.pangzai.win/wp-content/uploads/2025/05/image-43.png)
+
 7.  **使用 Helm 安装 Hoppscotch**
     修改完 `your_config.yaml` 之后就是在 Kubernetes 集群当中执行 Helm 来安装 Hoppscotch。
     如果没有附上最后的 `./your_config.yaml`，那么程序就会拿原版的 `yaml`。
