@@ -71,7 +71,7 @@ community:
         ws: "ws://hcbackend.pangzai.win/backend/graphql"
         api: "https://hcbackend.pangzai.win/backend/v1"
       redirect: "https://hcbackend.pangzai.win"
-      whitelistedOrigins: "https://hcbackend.pangzai.win/backend,https://hcbackend.pangzai.win,https://hcbackend.pangzai.win/admin"
+      whitelistedOrigins: "app://hcbackend_bm3913_com_my,http://app.hcbackend_bm3913_com_my"
 
     auth:
       allowedProviders: "EMAIL" # "GOOGLE,MICROSOFT,GITHUB,EMAIL"
